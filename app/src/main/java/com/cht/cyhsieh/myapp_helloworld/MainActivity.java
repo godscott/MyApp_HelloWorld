@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
+
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getCanonicalName();
 
@@ -13,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AppCenter.start(getApplication(), "845ee232-e6b7-4e75-afdd-6fdabcbab28f",
+                Analytics.class, Crashes.class);
 
 //        startActivity(new Intent(MainActivity.this, TranscoderActivity.class));
 
