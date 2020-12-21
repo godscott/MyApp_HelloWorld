@@ -1,0 +1,181 @@
+package com.cht.cyhsieh.myapp_helloworld;
+
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.os.SystemClock;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import net.ypresto.androidtranscoder.MediaTranscoder;
+import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.concurrent.Future;
+
+
+public class TranscoderActivity extends Activity {
+    private static final String TAG = "TranscoderActivity";
+    private static final String FILE_PROVIDER_AUTHORITY = "com.cht.cyhsieh.myapp_helloworld.fileprovider";
+    private static final int REQUEST_CODE_PICK = 1;
+    private static final int PROGRESS_BAR_MAX = 1000;
+    private Future<Void> mFuture;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_transcoder);
+        findViewById(R.id.select_video_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), REQUEST_CODE_PICK);
+            }
+        });
+        findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFuture.cancel(true);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PICK: {
+                final File file;
+                if (resultCode == RESULT_OK) {
+//                        File outputDir = new File(getExternalFilesDir(null), "outputs");
+////                        //noinspection ResultOfMethodCallIgnored
+////                        outputDir.mkdir();
+                        File outputDir = new File(getOutMediaVideoPath(),"temp.mp4");
+//                        outputDir.mkdir();
+                        file = outputDir;//File.createTempFile("transcode_test", ".mp4", outputDir);
+
+                    File inputFile = new File(getOutMediaVideoPath(), "V_20190507_144245_OC0.mp4");
+
+//                    ContentResolver resolver = getContentResolver();
+//                    final ParcelFileDescriptor parcelFileDescriptor;
+//                    try {
+//                        parcelFileDescriptor = resolver.openFileDescriptor(data.getData(), "r");
+//                    } catch (FileNotFoundException e) {
+//                        Log.w("Could not open '" + data.getDataString() + "'", e);
+//                        Toast.makeText(TranscoderActivity.this, "File not found.", Toast.LENGTH_LONG).show();
+//                        return;
+//                    }
+//                    final FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+//                    final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+//                    progressBar.setMax(PROGRESS_BAR_MAX);
+//                    final long startTime = SystemClock.uptimeMillis();
+                    MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
+                        @Override
+                        public void onTranscodeProgress(double progress) {
+//                            if (progress < 0) {
+//                                progressBar.setIndeterminate(true);
+//                            } else {
+//                                progressBar.setIndeterminate(false);
+//                                progressBar.setProgress((int) Math.round(progress * PROGRESS_BAR_MAX));
+//                            }
+                        }
+
+                        @Override
+                        public void onTranscodeCompleted() {
+//                            Log.d(TAG, "transcoding took " + (SystemClock.uptimeMillis() - startTime) + "ms");
+//                            onTranscodeFinished(true, "transcoded file placed on " + file, parcelFileDescriptor);
+//                            Uri uri = FileProvider.getUriForFile(TranscoderActivity.this, FILE_PROVIDER_AUTHORITY, file);
+//                            startActivity(new Intent(Intent.ACTION_VIEW)
+//                                    .setDataAndType(uri, "video/mp4")
+//                                    .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
+
+//                            onTranscodeFinished(true, "transcoded file placed on " + file, parcelFileDescriptor);
+                            Log.d(TAG, "onTranscodeCompleted");
+                            Uri uri = FileProvider.getUriForFile(TranscoderActivity.this, FILE_PROVIDER_AUTHORITY, file);
+                            startActivity(new Intent(Intent.ACTION_VIEW)
+                                    .setDataAndType(uri, "video/mp4")
+                                    .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
+                        }
+
+                        @Override
+                        public void onTranscodeCanceled() {
+//                            onTranscodeFinished(false, "Transcoder canceled.", parcelFileDescriptor);
+                            Log.d(TAG, "onTranscodeCanceled");
+                        }
+
+                        @Override
+                        public void onTranscodeFailed(Exception exception) {
+//                            onTranscodeFinished(false, "Transcoder error occurred.", parcelFileDescriptor);
+                            Log.d(TAG, "onTranscodeFailed");
+                        }
+                    };
+                    Log.d(TAG, "transcoding into " + file);
+                    try {
+                        mFuture = MediaTranscoder.getInstance().transcodeVideo(inputFile.getAbsolutePath(), file.getAbsolutePath(),
+                                MediaFormatStrategyPresets.createAndroid720pStrategy(8000 * 1000, 128 * 1000, 1), listener);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    switchButtonEnabled(true);
+                }
+                break;
+            }
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public static String strOutMediaPath = android.os.Environment.getExternalStorageDirectory() + File.separator + "ECallPro";
+    public static String getOutMediaVideoPath(){
+        File MediaPath = new File(strOutMediaPath + File.separator + "Video");
+        if(!MediaPath.exists())
+            MediaPath.mkdirs();
+        return MediaPath.getAbsolutePath();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.transcoder, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void onTranscodeFinished(boolean isSuccess, String toastMessage, ParcelFileDescriptor parcelFileDescriptor) {
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar.setIndeterminate(false);
+        progressBar.setProgress(isSuccess ? PROGRESS_BAR_MAX : 0);
+        switchButtonEnabled(false);
+        Toast.makeText(TranscoderActivity.this, toastMessage, Toast.LENGTH_LONG).show();
+        try {
+            parcelFileDescriptor.close();
+        } catch (IOException e) {
+            Log.w("Error while closing", e);
+        }
+    }
+
+    private void switchButtonEnabled(boolean isProgress) {
+        findViewById(R.id.select_video_button).setEnabled(!isProgress);
+        findViewById(R.id.cancel_button).setEnabled(isProgress);
+    }
+}

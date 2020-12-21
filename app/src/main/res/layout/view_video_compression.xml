@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <VideoView
+        android:id="@+id/view_video_compression_videoView_videoFile"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/view_video_compression_progressbar"
+        android:clickable="false"
+        />
+        
+    <!-- <ImageView 
+        android:id="@+id/view_video_compression_imageView_videoView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/view_video_compression_progressbar"
+        /> -->
+    
+    <TextView 
+        android:id="@+id/view_video_compression_textView_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="影片壓縮中"
+        android:textSize="20sp"
+        android:layout_above="@+id/view_video_compression_progressbar"
+        android:layout_centerHorizontal="true"
+        />
+    
+    <ProgressBar
+        android:id="@+id/view_video_compression_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:progress="0" />
+
+</RelativeLayout>

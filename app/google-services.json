@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "219375904109",
+    "firebase_url": "https://ecall-58c99.firebaseio.com",
+    "project_id": "ecall-58c99",
+    "storage_bucket": "ecall-58c99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219375904109:android:bec903b16b51dd4170e664",
+        "android_client_info": {
+          "package_name": "com.cht.chtphone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219375904109-uufktvcjj3ehskcpoik8o8ui004gknt2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK5DcgMJ6bUfFpWqdbbXwLhN8xQ8790NY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219375904109-uufktvcjj3ehskcpoik8o8ui004gknt2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219375904109:android:7dedd43ece965c6170e664",
+        "android_client_info": {
+          "package_name": "com.cht.cyhsieh.myapp_helloworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219375904109-uufktvcjj3ehskcpoik8o8ui004gknt2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK5DcgMJ6bUfFpWqdbbXwLhN8xQ8790NY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219375904109-uufktvcjj3ehskcpoik8o8ui004gknt2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
