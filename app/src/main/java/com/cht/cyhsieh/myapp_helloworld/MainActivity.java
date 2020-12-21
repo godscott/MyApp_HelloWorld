@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppCenter.start(getApplication(), "845ee232-e6b7-4e75-afdd-6fdabcbab28f",
+        AppCenter.start(getApplication(), "7339c9da-874a-4b9c-a728-3b97d1f867f5",
                 Analytics.class, Crashes.class);
 
 //        startActivity(new Intent(MainActivity.this, TranscoderActivity.class));
